@@ -19,3 +19,16 @@ body {
   color: #26284a;
   line-height: 1.7;
 }
+
+.hero {
+  position: relative;
+  height: 350px;
+  background-image: url("../images/Capture_d_écran_install_simba.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+}
