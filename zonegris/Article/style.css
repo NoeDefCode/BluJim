@@ -1,0 +1,21 @@
+:root {
+  --primary: #3c3f52;
+  --accent: #ff6900;
+  --bg: #f5f6fa;
+  --white: #ffffff;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Roboto", Arial, sans-serif;
+  background: var(--bg);
+  color: #26284a;
+  line-height: 1.7;
+}
