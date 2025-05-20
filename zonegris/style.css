@@ -1,0 +1,65 @@
+﻿body {
+    background-color: #0b0b21;
+}
+
+h1 {
+    color: ghostwhite;
+    margin-top: 5%;
+    font-family: "Bungee Shade", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 4em;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction:column
+}
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10%;
+    gap: 60px; 
+    background: #0b0b21; 
+    padding: 25px 0;
+}
+
+
+    .button button {
+        width: 250px;
+        padding: 15px 0;
+        font-size: 1.4em;
+        text-align: center;
+        font-family: "Funnel Display", sans-serif;
+        font-optical-sizing: auto;
+        background: transparent; 
+        border: 2.5px solid #444; 
+        cursor: pointer;
+        outline: none;
+        transition: background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+        box-shadow: 2px 3px 8px #0003;
+    }
+
+
+#codepirate button {
+    border-color: #ef5609;
+    color: #ef5609;
+}
+
+    #codepirate button:hover {
+        background: #ef5609;
+        color: #fff;
+    }
+
+#blujim button {
+    border-color: #2aeaf2;
+    color: #2aeaf2;
+}
+
+    #blujim button:hover {
+        background: #2aeaf2;
+        color: #222;
+    }
