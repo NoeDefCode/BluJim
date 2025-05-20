@@ -1,4 +1,3 @@
-// import logo from "./logo.svg";
 import "./App.css";
 import AudioPlayer from "./AudioPlayer";
 
@@ -16,13 +15,12 @@ const fonts = [
 
 function App() {
   const [fontIndex, setFontIndex] = useState(0);
-  const [bpm, setBpm] = useState(100); // valeur par défaut
+  const [bpm, setBpm] = useState(100);
 
-  // Calcul du délai selon le bpm : une pulsation = 60_000/bpm ms
   const intervalDelay = 60000 / bpm;
 
   useEffect(() => {
-    setFontIndex(0); // reset à chaque changement de bpm
+    setFontIndex(0);
     const interval = setInterval(() => {
       setFontIndex((prev) => (prev + 1) % fonts.length);
     }, intervalDelay);

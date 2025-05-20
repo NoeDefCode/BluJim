@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Installer un serveur Samba sous Linux</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- HERO PARALLAX / HEADER -->
+    <header class="hero">
+      <div class="hero__overlay">
+        <h1 class="hero__title">Installer un serveur Samba sous Linux</h1>
+        <p class="hero__subtitle">Guide étape par étape <br />par Noé</p>
+      </div>
+    </header>
+    <main class="main-content">
+        <article class="article">
+          
+          <nav class="table-of-contents" aria-label="Sommaire">
+            <strong>Sommaire</strong>
+            <ol>
+              <li><a href="#intro">Introduction</a></li>
+              <li><a href="#prerequis">Prérequis</a></li>
+              <li><a href="#installation">Installation de Samba</a></li>
+              <li><a href="#config">Configuration de Samba</a></li>
+              <li><a href="#test">Test et accès au partage</a></li>
+              <li><a href="#conclusion">Conclusion</a></li>
+            </ol>
+          </nav>
+    
+          <section id="intro">
+            <h2>Introduction</h2>
+            <p>Dans cet article, je vous explique comment mettre en place un serveur de fichiers sous Linux avec Samba…</p>
+          </section>
+    
+          <section id="prerequis">
+            <h2>Prérequis</h2>
+            <ul>
+              <li>Un serveur Linux opérationnel (Debian, Ubuntu…)</li>
+              <li>Accès administrateur (root ou sudo)</li>
+              <li>Oracle Virtual Box pour installer les machines virtuelles</li>
+              <li>Une image Windows 10 en verion d'essaie</li>
+            </ul>
+          </section>
+
+          <section id="configuration">
+            <h2>Configuration Oracle Virtual Box</h2>
+            <p>Après l'installation de nos VM, dans la partie configuration de Virtual Box, dans <strong>réseaux</strong><br>
+            On rajoute deux carte, la première en <strong>NAT</strong>, la deuxième en <strong>Réseaux interne</strong><br>
+        <strong>Important</strong>, Il faut choisir le même nom du <strong>réseaux interne</strong> pour toutes nos VM.</p>
+
+        <figure>
+            <img src="../images/Capture_d_écran_carte_réseaux 2.png" alt="Configuration réseaux Virtual Box (capture d'écran)">
+            <figcaption>Installation de Samba sous Ubuntu</figcaption>
+          </figure>
+          </section>
+
+          <section id="attribution des IP">
+            <h2>Attribution des ip fixes sur la bonne carte réseaux</h2>
+            <p>On ouvre le terminal avec <strong>Ctrl + Alt + T</strong></p>
+            <pre><code class="language-bash">
+    sudo nano /etc/netplan/01-netcfg.yaml
+    sudo netplan apply
+            </code></pre>
+           
+            <figure>
+              <img src="../images/ip.png" alt="Attribution ip (capture d'écran)">
+              <figcaption>Attribution des ip sur nos machines Linux</figcaption>
+            </figure>
+            <p>Sur <strong>Kali</strong>, la modification se fait via <strong>Network manager</strong><br>
+            Sur <strong>Windows</strong>, tu le fera dans le panneau de configuration > <strong>Réseaux</strong></p>
+          </section>
+    
+          <section id="installation">
+            <h2>Installation de Samba sur Linux</h2>
+            <p>On ouvre le terminal avec <strong>Ctrl + Alt + T</strong></p>
+            <pre><code class="language-bash">
+    sudo apt update
+    sudo apt install samba
+            </code></pre>
+           
+            <figure>
+              <img src="../images/Capture_d_écran_install_simba.png" alt="Installation de Samba (capture d'écran)">
+              <figcaption>Installation de Samba sur nos machines Linux</figcaption>
+            </figure>
+          </section>
+    
+    
+          <section id="config">
+            <h2>Configuration de Samba</h2>
+            <p>On détermine au préalable laquelle de nos machines hébergera le <strong>serveur</strong>, pour ma part ce sera Ubuntu</p>
+            <pre><code class="language-bash">
+                sudo mkdir /srv/partage #(Pour créer le dossier de partage)
+                sudo chmod 770 /srv/partage #(pour les droits)
+                sudo adduser nom_de_ton_choix
+                sudo smbpasswd -a nom_de_ton_choix #(Donne un mdp solide)
+            </code></pre>
+
+            <figure>
+                <img src="../images/Capture_d_écran paranètre_et_mdp.png" alt="Nom de partage (Capture d'écran)">
+                <figcaption>Ajout du profil de partage</figcaption>
+            </figure>
+            <p>Puis on ajoute ce profil dans le dossier <strong>conf</strong> de Samba</p>
+            <pre><code class="language-bash">
+                sudo nano /etc/samba/smb.conf
+            </code></pre>
+            <p><strong>Ajoute à la toute fin :</strong></p>
+            <pre><code>
+                [PARTAGE] 
+                  path = /srv/partage 
+                  valid users = nom_que_t_as_choisis
+                  read only = no 
+                  guest ok = no 
+                  force user = nom_que_t_as_choisis
+            </code></pre>
+            <p><strong>Et redémarre Samba</strong></p>
+            <pre><code>
+                sudo systemctl restart smbd 
+                sudo systemctl enable smbd
+                sudo smbstatus #(Pour vérifier)
+            </code></pre>
+
+           </section>
+    
+          <section id="test">
+            <h2>Test et accès au partage</h2>
+            <p>Sur nos machines clients Linux, on installe le client du partage, puis on liste les partages pour y accéder</p>
+            <pre><code>
+                sudo apt install smbclient cifs-utils 
+                smbclient -L //IP_Cible -U nom_que_t_as_choisis
+                smbclient //IP_Cible -U nom_que_t_as_choisis
+            </code></pre>
+            <h3>Test partage</h3>
+            <pre><code>
+                echo "test partage" > test.txt 
+                put test.txt #(dans le partage Samba)
+            </code></pre>
+            <figure>
+                <img src="../images/Capture_d_écran_envoie_dossier_test_réussi.png" alt="Partage réussi (Capture d'écran)">
+                <figcaption>Partage de fichier réussi</figcaption>
+            </figure>
+            <h3>Sur Windows</h3>
+            <figure>
+                <img src="../images/Capture_d_écran_ajout_emplacement_réseaux.png" alt="Ajout lecteur réseaux (Capture d'écran)">
+                <figcaption>Rajout du lecteur réseaux sur Windows</figcaption>
+            </figure>
+
+          </section>
+    
+          <section id="conclusion">
+            <h2>Conclusion</h2>
+            <p>Les machines sont bien connectées entre elles, le partage de fichier fonctionne entre les machines VM</p>
+          </section>
+        </article>
+      </main>
+    </body>
+    </html>
+  </body>
+</html>
